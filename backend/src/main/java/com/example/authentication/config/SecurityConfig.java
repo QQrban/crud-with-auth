@@ -39,9 +39,10 @@ public class SecurityConfig {
                     .requestMatchers(
                             "/api/v1/auth/**",
                             "/ping",
-                            "/login",
                             "/css/**", "/js/**"
                     ).permitAll()
+                    .requestMatchers("/api/v1/add-product").authenticated()
+                    .requestMatchers("/api/v1/products").authenticated()
                     .anyRequest().authenticated()
             )
             .sessionManagement(sm ->

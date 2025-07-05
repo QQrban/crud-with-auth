@@ -1,9 +1,9 @@
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const Button = (props: ButtonProps) => {
-  return (
-    <button 
-        className="
+    return (
+        <button
+            className="
         bg-blue-400 
         text-white 
         text-lg
@@ -18,8 +18,8 @@ export const Button = (props: ButtonProps) => {
         ease-in-out
         uppercase
         "
-    >
-        {props.name}
-    </button>
-  )
-}
+        >
+            {props.name}
+        </button>
+    );
+};
