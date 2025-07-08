@@ -58,4 +58,10 @@ public class ProductService {
 
         return ProductResponse.from(product);
     }
+
+    public void deleteProduct(List<Integer> id) {
+        List<Product> products = productRepository.findAllById(id);
+
+        productRepository.deleteAll(products);
+    }
 }

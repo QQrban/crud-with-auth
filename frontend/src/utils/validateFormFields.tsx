@@ -9,6 +9,7 @@ type handleFormSubmitProps = {
     id: number;
     setValue: React.Dispatch<React.SetStateAction<ProductType>>;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setMode: React.Dispatch<React.SetStateAction<Mode>>;
     setCreatedProduct: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -20,6 +21,7 @@ export const handleFormSubmit = async ({
     id,
     setValue,
     setOpen,
+    setMode,
     setCreatedProduct,
 }: handleFormSubmitProps) => {
     if (Object.values(numericValue).some((x) => x === null)) {
@@ -67,6 +69,7 @@ export const handleFormSubmit = async ({
             });
             setOpen(false);
             setCreatedProduct(true);
+            setMode("add");
         }
     } catch (e) {
         console.log(e);

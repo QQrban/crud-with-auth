@@ -4,10 +4,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 interface EnhancedTableToolbarProps {
     numSelected: number;
+    deleteSelectedProducts: () => void;
 }
 
-export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-    const { numSelected } = props;
+export function EnhancedTableToolbar({numSelected, deleteSelectedProducts}: EnhancedTableToolbarProps) {
+
     return (
         <Toolbar
             sx={[
@@ -45,7 +46,7 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
             )}
             {numSelected > 0 ? (
                 <Tooltip title="Delete">
-                    <IconButton>
+                    <IconButton onClick={deleteSelectedProducts}>
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>

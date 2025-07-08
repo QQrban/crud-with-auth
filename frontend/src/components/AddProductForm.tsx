@@ -9,8 +9,9 @@ import { Input } from "./Input";
 type AddProductFormProps = {
     open: boolean;
     mode: Mode;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     value: ProductType;
+    setMode: React.Dispatch<React.SetStateAction<Mode>>;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setValue: React.Dispatch<React.SetStateAction<ProductType>>;
     numericValue: NumericValueType;
     setNumericValue: React.Dispatch<React.SetStateAction<NumericValueType>>;
@@ -40,13 +41,29 @@ export default function AddProductForm({
     open,
     setOpen,
     mode,
+    setMode,
     value,
     setValue,
     numericValue,
     setNumericValue,
     handleFormSubmit,
 }: AddProductFormProps) {
-    const handleClose = () => setOpen(false);
+    
+    const handleClose = () => {
+        setOpen(false);
+        setValue({
+            name: "",
+            description: "",
+            price: 0,
+        });
+        setNumericValue({
+            proteins: null,
+            fats: null,
+            carbs: null,
+            sugar: null,
+        });
+        setMode("add");
+    };
 
     return (
         <div>

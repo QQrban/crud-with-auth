@@ -10,7 +10,13 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import { useMemo, useState } from "react";
-import type { Mode, NumericValueType, ProductData, ProductDataTableType, ProductType } from "../types/types";
+import type {
+    Mode,
+    NumericValueType,
+    ProductData,
+    ProductDataTableType,
+    ProductType,
+} from "../types/types";
 import { EnhancedTableToolbar } from "./ToolBar";
 import { EnhancedTableHead } from "./HeadCell";
 import { getComparator } from "../utils/comparator";
@@ -18,25 +24,30 @@ import { getComparator } from "../utils/comparator";
 type Order = "asc" | "desc";
 
 type mainTableProps = {
+    selected: number[];
     rows: ProductData[];
+    setSelected: React.Dispatch<React.SetStateAction<number[]>>;
     setMode: React.Dispatch<React.SetStateAction<Mode>>;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setValue: React.Dispatch<React.SetStateAction<ProductType>>;
     setNumericValue: React.Dispatch<React.SetStateAction<NumericValueType>>;
     setId: React.Dispatch<React.SetStateAction<number>>;
+    deleteSelectedProducts: () => void;
 };
 
 export default function EnhancedTable({
     rows,
+    selected,
+    setSelected,
     setMode,
     setOpen,
     setValue,
     setNumericValue,
     setId,
+    deleteSelectedProducts
 }: mainTableProps) {
     const [order, setOrder] = useState<Order>("asc");
     const [orderBy, setOrderBy] = useState<keyof ProductDataTableType>("id");
-    const [selected, setSelected] = useState<readonly number[]>([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -61,7 +72,7 @@ export default function EnhancedTable({
 
     const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
         const selectedIndex = selected.indexOf(id);
-        let newSelected: readonly number[] = [];
+        let newSelected: number[] = [];
 
         if (selectedIndex === -1) {
             newSelected = [...selected, id];
@@ -90,26 +101,33 @@ export default function EnhancedTable({
         [order, orderBy, page, rowsPerPage, rows]
     );
 
-    const handleEditClick = (e: React.MouseEvent, row: ProductDataTableType) => {
+    const handleEditClick = (
+        e: React.MouseEvent,
+        row: ProductDataTableType
+    ) => {
         e.stopPropagation();
         setOpen(true);
         setMode("edit");
-        setValue(row)
+        setValue(row);
         const descriptionToExtract = row.description;
-        const [proteins, fats, carbs, sugar] = descriptionToExtract.match(/\d+/g)?.map(Number) ?? [];
-        setId(row.id)
+        const [proteins, fats, carbs, sugar] =
+            descriptionToExtract.match(/\d+/g)?.map(Number) ?? [];
+        setId(row.id);
         setNumericValue({
             proteins: proteins,
             fats: fats,
             carbs: carbs,
-            sugar: sugar
-        })
+            sugar: sugar,
+        });
     };
 
     return (
         <Box sx={{ width: "100%" }}>
             <Paper sx={{ width: "100%", mb: 2 }}>
-                <EnhancedTableToolbar numSelected={selected.length} />
+                <EnhancedTableToolbar
+                    deleteSelectedProducts={deleteSelectedProducts}
+                    numSelected={selected.length}
+                />
                 <TableContainer>
                     <Table sx={{ minWidth: 850 }}>
                         <EnhancedTableHead
@@ -175,7 +193,9 @@ export default function EnhancedTable({
                                                     top: 5,
                                                     left: 0,
                                                 }}
-                                                onClick={(e) => handleEditClick(e, row)}
+                                                onClick={(e) =>
+                                                    handleEditClick(e, row)
+                                                }
                                             >
                                                 <EditIcon />
                                             </IconButton>

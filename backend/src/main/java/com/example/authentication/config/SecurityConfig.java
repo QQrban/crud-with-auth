@@ -44,6 +44,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/v1/add-product").authenticated()
                     .requestMatchers("/api/v1/products").authenticated()
                     .requestMatchers("/api/v1/update/**").authenticated()
+                    .requestMatchers("/api/v1/delete").authenticated()
                     .anyRequest().authenticated()
             )
             .sessionManagement(sm ->

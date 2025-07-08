@@ -17,6 +17,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductRepository productRepository;
 
     @PostMapping("/add-product")
     public ResponseEntity<ProductResponse> createProduct(
@@ -38,5 +39,10 @@ public class ProductController {
             @AuthenticationPrincipal User userDetails
     ) {
         return ResponseEntity.ok(productService.updateProduct(id, request, userDetails));
+    }
+
+    @DeleteMapping("/delete")
+    public void deleteProduct(@RequestBody List<Integer> ids){
+        productService.deleteProduct(ids);
     }
 }

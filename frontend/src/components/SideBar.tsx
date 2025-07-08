@@ -9,8 +9,6 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
-
-import SearchBar from "./SearchBar";
 import { useNavigate } from "react-router-dom";
 import { Logo } from "./Logo";
 import type { DrawerItem } from "../types/types";
@@ -34,8 +32,7 @@ export default function SideBar() {
     const drawer = (
         <div className="p-4 h-full">
             <List className="flex flex-col justify-between h-full">
-                <SearchBar />
-                <ListItem className="pt-13" disablePadding>
+                <ListItem className="" disablePadding>
                     <ListItemButton onClick={() => navigate("/storage")}>
                         <ListItemIcon>
                             <Inventory2Icon />

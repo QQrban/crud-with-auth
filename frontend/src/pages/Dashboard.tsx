@@ -15,6 +15,7 @@ import { createData } from "../utils/createData";
 
 export const Dashboard = () => {
     const [createdProduct, setCreatedProduct] = useState(false);
+    const [selected, setSelected] = useState<number[]>([]);
     const [rows, setRows] = useState<ProductData[]>([]);
     const [open, setOpen] = useState(false);
     const [mode, setMode] = useState<Mode>("add");
@@ -40,9 +41,10 @@ export const Dashboard = () => {
             value,
             mode,
             setValue,
+            setMode,
             setOpen,
             setCreatedProduct,
-            id
+            id,
         });
     }, [
         numericValue,
@@ -50,9 +52,10 @@ export const Dashboard = () => {
         value,
         mode,
         setValue,
+        setMode,
         setOpen,
         setCreatedProduct,
-        id
+        id,
     ]);
 
     const fetchProducts = async () => {
@@ -64,6 +67,21 @@ export const Dashboard = () => {
             setRows(mappedRows);
         } catch (e) {
             console.error(e);
+        }
+    };
+
+    const deleteSelectedProducts = async () => {
+        try {
+            const response = await api.delete("/delete", {
+                data: selected,
+            });
+
+            if (response.status == 200) {
+                fetchProducts();
+                setSelected([]);
+            }
+        } catch (e) {
+            console.log(e);
         }
     };
 
@@ -104,6 +122,7 @@ export const Dashboard = () => {
         >
             <AddProductForm
                 mode={mode}
+                setMode={setMode}
                 handleFormSubmit={submitWrapper}
                 numericValue={numericValue}
                 setNumericValue={setNumericValue}
@@ -120,6 +139,9 @@ export const Dashboard = () => {
                     </Button>
                 </div>
                 <DataTable
+                    deleteSelectedProducts={deleteSelectedProducts}
+                    selected={selected}
+                    setSelected={setSelected}
                     setId={setId}
                     setNumericValue={setNumericValue}
                     setValue={setValue}
