@@ -42,3 +42,5 @@ export type ProductData = {
     description: string;
     price: number;
 };
+
+export type Mode = "add" | "edit";

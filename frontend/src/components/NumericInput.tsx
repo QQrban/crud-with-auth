@@ -13,6 +13,7 @@ export const NumericInput = ({ field, value, onChange }: NumericInputProps) => {
     return (
         <>
             <Input
+                id={field}
                 type="text"
                 inputMode="numeric"
                 pattern="\d*"

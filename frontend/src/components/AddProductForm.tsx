@@ -2,12 +2,13 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import type { NumericValueType, ProductType } from "../types/types";
+import type { Mode, NumericValueType, ProductType } from "../types/types";
 import { NumericInput } from "./NumericInput";
 import { Input } from "./Input";
 
 type AddProductFormProps = {
     open: boolean;
+    mode: Mode;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     value: ProductType;
     setValue: React.Dispatch<React.SetStateAction<ProductType>>;
@@ -38,6 +39,7 @@ const inputFields: (keyof NumericValueType)[] = [
 export default function AddProductForm({
     open,
     setOpen,
+    mode,
     value,
     setValue,
     numericValue,
@@ -67,7 +69,9 @@ export default function AddProductForm({
                     >
                         <CloseIcon />
                     </IconButton>
-                    <div className="text-2xl">Add Product</div>
+                    <div className="text-2xl">
+                        {mode == "add" ? "Add Product" : "Edit Product"}
+                    </div>
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
@@ -75,43 +79,64 @@ export default function AddProductForm({
                         }}
                         className="flex flex-col gap-10 mt-7"
                     >
-                        <Input
-                            value={value.name}
-                            onChange={(e) =>
-                                setValue({ ...value, name: e.target.value })
-                            }
-                            placeholder="Name"
-                        />
-                        {inputFields.map((field) => (
-                            <NumericInput
-                                key={field}
-                                field={field}
-                                value={numericValue[field]}
-                                onChange={(v) =>
-                                    setNumericValue((prev) => ({
-                                        ...prev,
-                                        [field]: v,
-                                    }))
+                        <div className="relative flex flex-col">
+                            <label className="text-gray-400" htmlFor="name">
+                                Name
+                            </label>
+                            <Input
+                                id="name"
+                                value={value.name}
+                                onChange={(e) =>
+                                    setValue({ ...value, name: e.target.value })
                                 }
+                                placeholder="Name"
                             />
+                        </div>
+                        {inputFields.map((field) => (
+                            <div className="relative flex flex-col" key={field}>
+                                <label
+                                    htmlFor={field}
+                                    className="capitalize text-gray-400"
+                                >
+                                    {field}
+                                </label>
+                                <NumericInput
+                                    field={field}
+                                    value={numericValue[field]}
+                                    onChange={(v) =>
+                                        setNumericValue((prev) => ({
+                                            ...prev,
+                                            [field]: v,
+                                        }))
+                                    }
+                                />
+                            </div>
                         ))}
-                        <Input
-                            min={0.1}
-                            max={15}
-                            step={0.01}
-                            type="number"
-                            inputMode="numeric"
-                            pattern="\d*"
-                            maxLength={2}
-                            value={value.price === 0 ? "" : value.price ?? ""}
-                            onChange={(e) =>
-                                setValue({
-                                    ...value,
-                                    price: Number(e.target.value),
-                                })
-                            }
-                            placeholder="Price"
-                        />
+                        <div className="relative flex flex-col">
+                            <label className="text-gray-400" htmlFor="price">
+                                Price
+                            </label>
+                            <Input
+                                id="price"
+                                min={0.1}
+                                max={15}
+                                step={0.01}
+                                type="number"
+                                inputMode="numeric"
+                                pattern="\d*"
+                                maxLength={2}
+                                value={
+                                    value.price === 0 ? "" : value.price ?? ""
+                                }
+                                onChange={(e) =>
+                                    setValue({
+                                        ...value,
+                                        price: Number(e.target.value),
+                                    })
+                                }
+                                placeholder="Price"
+                            />
+                        </div>
                         <Button
                             type="submit"
                             className="self-end w-30"

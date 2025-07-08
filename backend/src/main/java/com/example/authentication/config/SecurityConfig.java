@@ -43,6 +43,7 @@ public class SecurityConfig {
                     ).permitAll()
                     .requestMatchers("/api/v1/add-product").authenticated()
                     .requestMatchers("/api/v1/products").authenticated()
+                    .requestMatchers("/api/v1/update/**").authenticated()
                     .anyRequest().authenticated()
             )
             .sessionManagement(sm ->

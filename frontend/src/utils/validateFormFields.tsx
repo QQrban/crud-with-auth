@@ -1,10 +1,12 @@
 import api from "../api";
-import type { NumericValueType, ProductType } from "../types/types";
+import type { Mode, NumericValueType, ProductType } from "../types/types";
 
 type handleFormSubmitProps = {
     numericValue: NumericValueType;
     setNumericValue: React.Dispatch<React.SetStateAction<NumericValueType>>;
     value: ProductType;
+    mode: Mode;
+    id: number;
     setValue: React.Dispatch<React.SetStateAction<ProductType>>;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setCreatedProduct: React.Dispatch<React.SetStateAction<boolean>>;
@@ -14,6 +16,8 @@ export const handleFormSubmit = async ({
     numericValue,
     setNumericValue,
     value,
+    mode,
+    id,
     setValue,
     setOpen,
     setCreatedProduct,
@@ -42,7 +46,13 @@ export const handleFormSubmit = async ({
     }
 
     try {
-        const response = await api.post("/add-product", productToSubmit);
+        const url = mode === "add" ? "/add-product" : `/update/${id}`;
+
+        const response =
+            mode === "add"
+                ? await api.post(url, productToSubmit)
+                : await api.put(url, productToSubmit);
+
         if (response.status == 200) {
             setValue({
                 name: "",

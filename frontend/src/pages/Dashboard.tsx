@@ -4,6 +4,7 @@ import SideBar from "../components/SideBar";
 import { useCallback, useEffect, useState } from "react";
 import AddProductForm from "../components/AddProductForm";
 import type {
+    Mode,
     NumericValueType,
     ProductData,
     ProductType,
@@ -16,6 +17,9 @@ export const Dashboard = () => {
     const [createdProduct, setCreatedProduct] = useState(false);
     const [rows, setRows] = useState<ProductData[]>([]);
     const [open, setOpen] = useState(false);
+    const [mode, setMode] = useState<Mode>("add");
+    const [id, setId] = useState<number>(0);
+
     const [value, setValue] = useState<ProductType>({
         name: "",
         description: "",
@@ -34,17 +38,21 @@ export const Dashboard = () => {
             numericValue,
             setNumericValue,
             value,
+            mode,
             setValue,
             setOpen,
             setCreatedProduct,
+            id
         });
     }, [
         numericValue,
-        value,
         setNumericValue,
+        value,
+        mode,
         setValue,
         setOpen,
         setCreatedProduct,
+        id
     ]);
 
     const fetchProducts = async () => {
@@ -59,6 +67,21 @@ export const Dashboard = () => {
         }
     };
 
+    const openAddProduct = () => {
+        setOpen(true);
+        setValue({
+            name: "",
+            description: "",
+            price: 0,
+        });
+        setNumericValue({
+            proteins: null,
+            fats: null,
+            carbs: null,
+            sugar: null,
+        });
+    };
+
     useEffect(() => {
         fetchProducts();
     }, []);
@@ -68,7 +91,6 @@ export const Dashboard = () => {
             fetchProducts();
             setCreatedProduct(false);
         }
-        console.log(createdProduct);
     }, [createdProduct]);
 
     return (
@@ -81,6 +103,7 @@ export const Dashboard = () => {
             "
         >
             <AddProductForm
+                mode={mode}
                 handleFormSubmit={submitWrapper}
                 numericValue={numericValue}
                 setNumericValue={setNumericValue}
@@ -92,11 +115,18 @@ export const Dashboard = () => {
             <SideBar />
             <div className="flex flex-col gap-3">
                 <div className="self-end">
-                    <Button variant="contained" onClick={() => setOpen(true)}>
+                    <Button variant="contained" onClick={openAddProduct}>
                         Add Product
                     </Button>
                 </div>
-                <DataTable rows={rows} />
+                <DataTable
+                    setId={setId}
+                    setNumericValue={setNumericValue}
+                    setValue={setValue}
+                    setOpen={setOpen}
+                    setMode={setMode}
+                    rows={rows}
+                />
             </div>
         </div>
     );

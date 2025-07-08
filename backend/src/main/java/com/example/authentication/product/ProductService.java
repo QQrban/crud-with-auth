@@ -1,7 +1,6 @@
 package com.example.authentication.product;
 
 
-import com.example.authentication.exception.GlobalExceptionHandler;
 import com.example.authentication.product.dto.ProductRequest;
 import com.example.authentication.product.dto.ProductResponse;
 import com.example.authentication.user.User;
@@ -10,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -45,6 +43,19 @@ public class ProductService {
                 .stream()
                 .map(ProductResponse::from)
                 .toList();
+    }
 
+    public ProductResponse updateProduct(Integer id, ProductRequest request, User userDetails) {
+        var product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        product.setName(request.name());
+        product.setDescription(request.description());
+        product.setPrice(request.price());
+        product.setUserId(userDetails.getId());
+
+        productRepository.save(product);
+
+        return ProductResponse.from(product);
     }
 }

@@ -8,9 +8,9 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
 import { useMemo, useState } from "react";
-import type { ProductData, ProductDataTableType } from "../types/types";
+import type { Mode, NumericValueType, ProductData, ProductDataTableType, ProductType } from "../types/types";
 import { EnhancedTableToolbar } from "./ToolBar";
 import { EnhancedTableHead } from "./HeadCell";
 import { getComparator } from "../utils/comparator";
@@ -19,9 +19,21 @@ type Order = "asc" | "desc";
 
 type mainTableProps = {
     rows: ProductData[];
+    setMode: React.Dispatch<React.SetStateAction<Mode>>;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setValue: React.Dispatch<React.SetStateAction<ProductType>>;
+    setNumericValue: React.Dispatch<React.SetStateAction<NumericValueType>>;
+    setId: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export default function EnhancedTable({ rows }: mainTableProps) {
+export default function EnhancedTable({
+    rows,
+    setMode,
+    setOpen,
+    setValue,
+    setNumericValue,
+    setId,
+}: mainTableProps) {
     const [order, setOrder] = useState<Order>("asc");
     const [orderBy, setOrderBy] = useState<keyof ProductDataTableType>("id");
     const [selected, setSelected] = useState<readonly number[]>([]);
@@ -78,9 +90,21 @@ export default function EnhancedTable({ rows }: mainTableProps) {
         [order, orderBy, page, rowsPerPage, rows]
     );
 
-    const editProduct = (row: ProductDataTableType) => {
-        console.log(row);
-    }
+    const handleEditClick = (e: React.MouseEvent, row: ProductDataTableType) => {
+        e.stopPropagation();
+        setOpen(true);
+        setMode("edit");
+        setValue(row)
+        const descriptionToExtract = row.description;
+        const [proteins, fats, carbs, sugar] = descriptionToExtract.match(/\d+/g)?.map(Number) ?? [];
+        setId(row.id)
+        setNumericValue({
+            proteins: proteins,
+            fats: fats,
+            carbs: carbs,
+            sugar: sugar
+        })
+    };
 
     return (
         <Box sx={{ width: "100%" }}>
@@ -142,12 +166,18 @@ export default function EnhancedTable({ rows }: mainTableProps) {
                                         <TableCell align="right">
                                             {row.price}
                                         </TableCell>
-                                        <TableCell sx={{position: "relative"}}>
-                                            <IconButton sx={{position: "absolute", top: 5, left: 0}} onClick={(e) => {
-                                                e.stopPropagation()
-                                                editProduct(row);
-                                            }}>
-                                                <EditIcon/>
+                                        <TableCell
+                                            sx={{ position: "relative" }}
+                                        >
+                                            <IconButton
+                                                sx={{
+                                                    position: "absolute",
+                                                    top: 5,
+                                                    left: 0,
+                                                }}
+                                                onClick={(e) => handleEditClick(e, row)}
+                                            >
+                                                <EditIcon />
                                             </IconButton>
                                         </TableCell>
                                     </TableRow>
