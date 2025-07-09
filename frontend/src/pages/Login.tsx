@@ -1,12 +1,21 @@
 import { useState } from "react";
 import api from "../api";
 import "../index.css";
-import { type AuthResponse, type LoginForm } from "../types/types";
+import {
+    type AuthResponse,
+    type LoginForm,
+    type ModalInfoType,
+} from "../types/types";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+type LoginTypes = {
+    setModalInfo: React.Dispatch<React.SetStateAction<ModalInfoType>>;
+    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export default function Login({ setModalInfo, setOpenModal }: LoginTypes) {
     const navigate = useNavigate();
 
     const [loginForm, setLoginForm] = useState<LoginForm>({
@@ -30,6 +39,13 @@ export default function Login() {
             }
         } catch (error) {
             console.log(error);
+            setOpenModal(true)
+            setModalInfo({
+                type: "error",
+                header: "Incorrect username and/or password" ,
+                message:
+                    "If you have forgotten your password, please contact the database administrator to restore access",
+            });
         }
     };
 

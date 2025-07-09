@@ -44,3 +44,9 @@ export type ProductData = {
 };
 
 export type Mode = "add" | "edit";
+
+export type ModalInfoType = {
+    type: "success" | "error";
+    header: string;
+    message: string;
+}
